@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Любовное послание</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6;
+            font-family: 'Cursive', 'Serif';
+            text-align: center;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #text {
+            font-size: 2em;
+            color: #d6336c;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .heart {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            opacity: 0;
+            animation: heartAppear 2s ease-in-out forwards;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -100px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 100px;
+            top: 0;
+        }
+
+        .photo-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(
+                50% 15%, 61% 5%, 75% 0%, 88% 5%, 100% 20%, 100% 38%, 97% 50%,
+                89% 65%, 75% 80%, 50% 100%, 25% 80%, 11% 65%, 3% 50%, 0% 38%, 0% 20%, 12% 5%, 25% 0%, 39% 5%
+            );
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+        }
+
+        @keyframes heartAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-45deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(-45deg);
+            }
+        }
+    </style>
+</head>
+<body onclick="showNextText()">
+    <div id="text">Нажми, чтобы посмотреть</div>
+    
+    <script>
+        const phrases = [
+            "я", "люблю", "тебя", "мое", "солнышко", "ты", "очень", "дорога", "мне", "и",
+            "я", "хочу", "быть", "с тобой", "всю", "свою жизнь", "нас", "никогда", "ничто",
+            "не разлучит.", "мы", "вместе", "навсегда."
+        ];
+        
+        let index = 0;
+        const textElement = document.getElementById("text");
+
+        function showNextText() {
+            if (index < phrases.length) {
+                textElement.innerText = phrases[index];
+                textElement.style.opacity = 1;
+                index++;
+            } else if (index === phrases.length) {
+                createHeart();
+                index++;
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            document.body.appendChild(heart);
+
+            const photoContainer = document.createElement("div");
+            photoContainer.classList.add("photo-container");
+            heart.appendChild(photoContainer);
+
+            const photos = [
+                "photo1.jpg",
+                "photo2.jpg",
+                "photo3.jpg",
+                "photo4.jpg"
+            ];
+
+            photos.forEach((src, i) => {
+                const img = document.createElement("img");
+                img.src = src;
+                img.style.opacity = i === 0 ? "1" : "0"; // Первое фото видно сразу
+                photoContainer.appendChild(img);
+            });
+
+            let photoIndex = 0;
+            const images = photoContainer.querySelectorAll("img");
+
+setInterval(() => {
+                images[photoIndex].style.opacity = "0"; // Скрываем текущее фото
+                photoIndex = (photoIndex + 1) % images.length;
+                images[photoIndex].style.opacity = "1"; // Показываем следующее фото
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
